@@ -23,11 +23,9 @@ jobs:
         context: .
         push: true
         tags: |
-          ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:x86_64-${{ steps.date.outputs.version }}
-          ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:x86_64-latest
+          ghcr.io/$GITHUB_REPOSITORY:x86_64-${{ steps.date.outputs.version }}
+          ghcr.io/$GITHUB_REPOSITORY:x86_64-latest
       env:
-        REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-        REGISTRY_REPO: ${{ secrets.REGISTRY_REPO }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
     - name: Build and push Docker image for armv7
@@ -36,12 +34,10 @@ jobs:
         context: .
         push: true
         tags: |
-          ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:armv7-${{ steps.date.outputs.version }}
-          ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:armv7-latest
+          ghcr.io/$GITHUB_REPOSITORY:armv7-${{ steps.date.outputs.version }}
+          ghcr.io/$GITHUB_REPOSITORY:armv7-latest
         build-args: |
           --build-arg GOARCH=arm
           --build-arg GOARM=7
       env:
-        REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-        REGISTRY_REPO: ${{ secrets.REGISTRY_REPO }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
