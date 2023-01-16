@@ -1,0 +1,10 @@
+adb-shell==0.4.3
+cffi==1.15.1
+cryptography==39.0.0
+ephem==4.1.4
+pyasn1==0.4.8
+pycparser==2.21
+pydantic==1.10.4
+python-dotenv==0.21.0
+rsa==4.9
+typing_extensions==4.4.0

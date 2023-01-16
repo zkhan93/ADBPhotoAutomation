@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    network_mode: "host"
+    volumes:
+      - keystore:/keystore
+    env_file:
+      - .env
+
+volumes:
+  keystore:
