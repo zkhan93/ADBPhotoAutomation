@@ -23,8 +23,8 @@ jobs:
         context: .
         push: true
         tags: |
-          ghcr.io/${GITHUB_REPOSITORY}:x86_64-${{ steps.date.outputs.version }}
-          ghcr.io/${GITHUB_REPOSITORY}:x86_64-latest
+          ghcr.io/${{github.repository}}:x86_64-${{ steps.date.outputs.version }}
+          ghcr.io/${{github.repository}}:x86_64-latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -34,8 +34,8 @@ jobs:
         context: .
         push: true
         tags: |
-          ghcr.io/${GITHUB_REPOSITORY}:armv7-${{ steps.date.outputs.version }}
-          ghcr.io/${GITHUB_REPOSITORY}:armv7-latest
+          ghcr.io/${{github.repository}}:armv7-${{ steps.date.outputs.version }}
+          ghcr.io/${{github.repository}}:armv7-latest
         build-args: |
           --build-arg GOARCH=arm
           --build-arg GOARM=7
