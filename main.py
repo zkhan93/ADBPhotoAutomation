@@ -6,6 +6,12 @@ import logging
 import ephem
 from datetime import datetime
 from pydantic import BaseSettings
+from typing import Any
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("app")
+
+
 
 class Settings(BaseSettings):
     ip: str
@@ -13,26 +19,29 @@ class Settings(BaseSettings):
     keyfile: str
     # interval in seconds to click picture
     interval: int
+    unlock_seq: list[str]
 
     class Config:
         env_file = ".env"
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("app")
+        @classmethod
+        def parse_env_var(cls, field_name: str, raw_val: str) -> Any:
+            if field_name == 'unlock_seq':
+                return raw_val.split(' ')
+            return cls.json_loads(raw_val)
 
 
-# 10.8.0.4"
-class OnePlus:
-    def __init__(self, ip, port=5555, adbkey="/keystore/abdkey"):
-        self.adbkey = adbkey
-        self.adb = AdbDeviceTcp(ip, port, default_transport_timeout_s=9.)
+class AndroidDevice:
+    def __init__(self, config):
+        self.config = config
+        self.adb = AdbDeviceTcp(config.ip, config.port, default_transport_timeout_s=9.)
         self.adb.connect(rsa_keys=[self.signer], auth_timeout_s=0.1)
 
     @property
     def signer(self):
-        with open(self.adbkey) as f:
+        with open(self.config.adbkey) as f:
             priv = f.read()
-        with open(self.adbkey + '.pub') as f:
+        with open(self.config.adbkey + '.pub') as f:
             pub = f.read()
         return PythonRSASigner(pub, priv)
 
@@ -73,14 +82,27 @@ class OnePlus:
         self.swipe("up", from_end=True)
 
     def unlock(self):
-        # self.wake()
-        # self.swipe_up()
-        self.tap(240, 890)
-        self.tap(550, 1100)
-        self.tap(840, 1300)
-        self.tap(840, 890)
-        self.tap(240, 1300)
-        self.tap(840, 1500)
+        numpad = {
+            "1": (240, 890),
+            "2": (550, 890),
+            "3": (840, 890),
+            "4": (240, 1100),
+            "5": (550, 1100),
+            "6": (840, 1100),
+            "7": (240, 1300),
+            "8": (550, 1300),
+            "9": (840, 1300),
+            "del": (240, 1500),
+            "0": (550, 1500),
+            "check": (840, 1500)
+        }
+        for seq in self.config.unlock_seq:
+            xy = numpad.get(seq)
+            if xy:
+                self.tap(xy[0], xy[1])
+            else:
+                logger.error(f"unknown key {seq}")
+        
 
     def open_cam(self):
         mode = "photo" if is_lights_on() else "pro"
@@ -161,6 +183,7 @@ class OnePlus:
         if not self.screen_state.endswith("unlocked"):
             logger.info("phone is locked, unlocking")
             self.swipe("up")
+            time.sleep(0.5)
             self.unlock()
         else:
             logger.info("phone is unlocked, proceeding")
@@ -186,7 +209,7 @@ def is_lights_on():
 def main():
     config = Settings()
     logger.info(config)
-    dev = OnePlus(config.ip, config.port, config.keyfile)
+    dev = AndroidDevice(config)
     while True:
         try:
             start = time.time()
