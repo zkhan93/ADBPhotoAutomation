@@ -21,8 +21,9 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:x86_64-${{ env.version }}
-        tags: ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:x86_64-latest
+        tags: |
+          ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:x86_64-${{ env.version }}
+          ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:x86_64-latest
       env:
         REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
         REGISTRY_REPO: ${{ secrets.REGISTRY_REPO }}
@@ -33,8 +34,9 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:armv7-${{ env.version }}
-        tags: ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:armv7-latest
+        tags: |
+          ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:armv7-${{ env.version }}
+          ghcr.io/${{ env.REGISTRY_USERNAME }}/${{ env.REGISTRY_REPO }}:armv7-latest
         build-args: |
           --build-arg GOARCH=arm
           --build-arg GOARM=7
