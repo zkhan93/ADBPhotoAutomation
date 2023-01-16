@@ -1,9 +1,9 @@
-# OnePlus Night Picture Automator
+# Android Night Picture Automator
 
-This repository contains code that uses ADB to automate clicking night picture on a OnePlus 6 Android phone. The code is written in Python, and makes use of ADB (Android Debug Bridge) commands to interact with the device.
+This repository contains code that uses ADB to automate clicking night picture on an Android phone. The code is written in Python, and makes use of ADB (Android Debug Bridge) commands to interact with the device.
 
 ## Requirements
-- A OnePlus 6 Android phone with Wireless/USB Debugging enabled
+- A Android phone with Wireless/USB Debugging enabled
 - ADB (Android Debug Bridge) installed on your computer
 - Python 3
 
@@ -11,29 +11,31 @@ This repository contains code that uses ADB to automate clicking night picture o
 
 1. Clone the repository to your local machine
 ```
-git clone https://github.com/zkhan93/OnePlusNightPictureAutomator.git
+git clone https://github.com/zkhan93/adb-photo-automation.git
 ```
-2. Connect your OnePlus 6 to your computer using a USB cable, and make sure that USB Debugging is enabled on the device.
+2. Connect your Android phone to your computer
+    2.1 by using a USB cable OR
+    2.2 keep them on same network
+   and enable USB/WiFi debugging from "developer settings" 
 3. Go to the cloned repository directory and run the script
 
-```
-cd OnePlusNightPictureAutomator
-python main.py
+```bash
+$ cd adb-photo-automation
+$ python3 -m virtualenv venv
+$ source venv/bin/activate
+(venv)$ pip install -r requirements.txt
+(venv)$ python main.py
 ```
 
 ## Usage
 
-The script will prompt you to choose the folder where the night pictures will be saved.
-
-Please select the folder where you want to save the pictures:
-
-You can also customize the script to set the number of pictures to take and the delay between each picture.
-
-Set the number of pictures to take
-num_of_pics = 10
+You can also customize the script to set the number of pictures to take by adjusting the delay between each picture in `.env` file
 
 Set the delay between pictures (in seconds)
-delay = 2
+INTERVAL=10
+
+If you phone has a PIN lock then modify the UNLOCK_SEQ to automatically unlock it
+UNLOCK_SEQ=1 2 3 4 check
 
 ## Note
 
@@ -45,7 +47,7 @@ You're welcome to contribute to this project by sending pull requests and report
 
 ## Licence
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/zkhan93/OnePlusNightPictureAutomator/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/zkhan93/adb-photo-automation/blob/master/LICENSE) file for details.
 
 ## Acknowledgments
 
